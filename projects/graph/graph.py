@@ -13,42 +13,72 @@ class Graph:
         """
         Add a vertex to the graph.
         """
-        pass  # TODO
+        #always check first to see if it exists, represent as set
+        if vertex_id not in self.vertices:
+            self.vertices[vertex_id] = set()
 
     def add_edge(self, v1, v2):
         """
         Add a directed edge to the graph.
         """
-        pass  # TODO
+        if v1 in self.vertices and v2 in self.vertices:
+            self.vertices[v1].add(v2)
 
     def get_neighbors(self, vertex_id):
         """
         Get all neighbors (edges) of a vertex.
         """
-        pass  # TODO
+        #get alls are most common question for interviews/tests
+        if vertex_id in self.vertices:
+            return self.vertices[vertex_id]
+        return set()
 
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        queue = []
+        checked = set()
+        queue.append(starting_vertex)
+        while queue:
+            cur_node = queue.pop(0)
+            if cur_node not in checked:
+                checked.add(cur_node)
+                print(cur_node)
+                for e in self.get_neighbors(cur_node):
+                    queue.append(e)
 
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        stack = []
+        stack.append(starting_vertex)
+        checked = set()
+        while stack:
+            current = stack.pop()
+            if current not in checked:
+                checked.add(current)
+                print(current)
+                for e in self.get_neighbors(current):
+                    stack.append(e)
 
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, starting_vertex, checked=set()):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
         """
-        pass  # TODO
+        if starting_vertex in checked:
+            return
+        checked.add(starting_vertex)
+        print(starting_vertex)
+        for e in self.get_neighbors(starting_vertex):
+            self.dft_recursive(e, checked)
+        
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -56,7 +86,20 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
+        queue = []
+        checked = set()
+        queue.append([starting_vertex])
+        while queue:
+            cur_path = queue.pop(0)
+            cur_node = cur_path[-1]
+            if cur_node == destination_vertex:
+                return cur_path
+            if cur_node not in checked:
+                checked.add(cur_node)
+                for e in self.get_neighbors(cur_node):
+                    new_path = list(cur_path)
+                    new_path.append(e)
+                    queue.append(new_path)
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -64,7 +107,21 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        stack = []
+        stack.append([starting_vertex])
+        checked = set()
+        while stack:
+            cur_path = stack.pop()
+            cur_node = cur_path[-1]
+            if cur_node == destination_vertex:
+                return cur_path
+            if cur_node not in checked:
+                checked.add(cur_node)
+                print(cur_path)
+                for e in self.get_neighbors(cur_node):
+                    new_path = list(cur_path)
+                    new_path.append(e)
+                    stack.append(new_path)
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
@@ -74,7 +131,21 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        def recurse(vert, destination_vertex, checked=set()):
+            cur_node = vert[-1]
+            if cur_node in checked:
+                return
+            if cur_node == destination_vertex:
+                return vert
+            checked.add(cur_node)
+            for e in self.get_neighbors(cur_node):
+                new_path = list(vert)
+                new_path.append(e)
+                res = recurse(new_path, destination_vertex, checked)
+                if res:
+                    return res
+        return recurse([starting_vertex], destination_vertex)
+
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
