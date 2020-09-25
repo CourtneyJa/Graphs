@@ -123,7 +123,7 @@ class Graph:
                     new_path.append(e)
                     stack.append(new_path)
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
+    def dfs_recursive(self, starting_vertex, destination_vertex, checked=set(), path=[]):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -131,6 +131,7 @@ class Graph:
 
         This should be done using recursion.
         """
+        
         def recurse(vert, destination_vertex, checked=set()):
             cur_node = vert[-1]
             if cur_node in checked:
@@ -145,7 +146,7 @@ class Graph:
                 if res:
                     return res
         return recurse([starting_vertex], destination_vertex)
-
+       
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
