@@ -1,3 +1,7 @@
+from collections import deque
+import math
+from random import shuffle
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -44,9 +48,26 @@ class SocialGraph:
         self.friendships = {}
         # !!!! IMPLEMENT ME
 
-        # Add users
-
-        # Create friendships
+        if num_users < avg_friendships:
+            return
+        for i in range(1, num_users + 1):
+            self.add_user(f"user_{i}")
+        
+        def add_friends(arr, num_users, avg_friends, res, prev_i):
+            if len(arr) == avg_friends:
+                if arr[0] != arr[1]:
+                    res.append(list(arr))
+                return
+            for i in range(prev_i+1, num_users+1):
+                arr.append(i)
+                add_friends(arr, num_users, avg_friends, res, i)
+                arr.pop()
+            return res
+        res = add_friends([], num_users, avg_friendships, [], 0)
+        shuffle(res)
+        for u, friend in res[:num_users]:
+            self.add_friendship(u, friend)    
+                
 
     def get_all_social_paths(self, user_id):
         """
@@ -59,6 +80,19 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        queue = deque()
+        queue.append([user_id])
+        while len(queue) > 0:
+            cur_path = queue.popleft()
+            cur_node = cur_path[-1]
+            if cur_node in visited:
+                continue
+            visited[cur_node] = cur_path
+            for friend in self.friendships[cur_node]:
+                if friend not in visited:
+                    new_path = list(cur_path)
+                    new_path.append(friend)
+                    queue.append(new_path)
         return visited
 
 
